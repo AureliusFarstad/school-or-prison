@@ -1,0 +1,72 @@
+[
+    {
+        "fileName": "gefangnis_zh.jpeg",
+        "building": "PRISON",
+        "country": "Switzerland",
+        "city": "Zurich",
+        "source": "https://www.zh.ch/de/direktion-der-justiz-und-des-innern/justizvollzug-wiedereingliederung/untersuchungsgefaengnisse-zuerich/gefaengnis-zuerich.html"
+    },
+    {
+        "fileName": "Storstrom_Prison_1.jpg",
+        "building": "PRISON",
+        "country": "Denmark",
+        "city": "Falster",
+        "source": "https://urbannext.net/storstrom-prison/"
+    },
+    {
+        "fileName": "Grampian_Prison.jpg",
+        "building": "PRISON",
+        "country": "Scotland",
+        "city": "Peterhead",
+        "source": "https://www.futuristarchitecture.com/41758-hmp-grampian-a-modern-prison-with-high-quality-facilities-in-uk.html"
+    },
+    {
+        "fileName": "strangeways_pr.jpg",
+        "building": "PRISON",
+        "country": "England",
+        "city": "Manchester",
+        "source": "https://www.theguardian.com/world/2020/mar/18/first-uk-prisoner-with-covid-19-confirmed-at-strangeways-manchester"
+    },
+    {
+        "fileName": "ldn-l-twin-towers.jpg",
+        "building": "PRISON",
+        "country": "USA",
+        "city": "Los Angeles, CA",
+        "source": "https://www.dailynews.com/2018/03/06/la-county-will-pay-a-5-9-million-settlement-after-claim-that-inmates-medical-needs-were-ignored/"
+    },
+    {
+        "fileName": "Laney-High-School-Gym-Exterior-1.jpg",
+        "building": "SCHOOL",
+        "country": "USA",
+        "city": "Wilmington, NC",
+        "source": "https://www.barnhillcontracting.com/projects/laney-high-school/"
+    },
+    {
+        "fileName": "a01-after.jpg",
+        "building": "SCHOOL",
+        "country": "USA",
+        "city": "Wilmington, DE",
+        "source": "http://architects-one.com/photos/2018/11/09/howard-high-school-before-after-photos-2/"
+    },
+    {
+        "fileName": "wilmington.png",
+        "building": "SCHOOL",
+        "country": "USA",
+        "city": "Wilmington, MA",
+        "source": "https://doreandwhittier.com/wilmington-high-school.html"
+    },
+    {
+        "fileName": "Toth_arpad_Gimnazium.JPG",
+        "building": "SCHOOL",
+        "country": "Hungary",
+        "city": "Debrecen",
+        "source": "https://commons.wikimedia.org/wiki/File:T%C3%B3th_%C3%81rp%C3%A1d_Gimn%C3%A1zium.JPG"
+    },
+    {
+        "fileName": "1200px-Tokyo_Metropolitan_Shinjuku_High_School_03.jpg",
+        "building": "SCHOOL",
+        "country": "Japan",
+        "city": "Tokyo",
+        "source": "https://www.wikidata.org/wiki/Q11525495"
+    }
+]
