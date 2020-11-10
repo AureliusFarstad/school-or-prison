@@ -1,14 +1,17 @@
 const express = require('express');
+// import express from 'express';
 const app = express();
 
 const path = require('path');
+// import path from 'path'
 const fs = require('fs');
 
 const port = process.env.PORT || 5000;
 var bodyParser = require('body-parser');
 
-var db = require('./database.js')
-var imgUpload = require('./img-upload.js')
+var db = require('./database.js');
+// import { db } from './database.js'
+var imgUpload = require('./img-upload.js');
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
@@ -23,7 +26,7 @@ app.use(bodyParser.urlencoded({
 
 app.get('/api/card/total_count', (req, res, next) => {
   console.log("GET card total_count")
-  var sql = 'SELECT COUNT(*) FROM buildings'
+  var sql = 'SELECT COUNT(*) as count FROM buildings'
   var params = []
   db.get(sql, params, (err, row) => {
     if (err) {
@@ -32,12 +35,9 @@ app.get('/api/card/total_count', (req, res, next) => {
       });
       return
     }
-    console.log(row)
     res.json({
       "message": "success",
-      "data": {
-        count: row["COUNT(*)"]
-      }
+      "data": row
     })
   });
 });
@@ -108,7 +108,7 @@ app.post('/api/card', imgUpload.single('image'), (req, res, next) => {
 
 app.get('/api/vote/total_count', (req, res, next) => {
   console.log("GET vote total_count")
-  var sql = 'SELECT COUNT(*) FROM votes'
+  var sql = 'SELECT COUNT(*) as count FROM votes'
   var params = []
   db.get(sql, params, (err, row) => {
     if (err) {
@@ -119,9 +119,7 @@ app.get('/api/vote/total_count', (req, res, next) => {
     }
     res.json({
       "message": "success",
-      "data": {
-        count: row["COUNT(*)"]
-      }
+      "data": row
     })
   });
 });

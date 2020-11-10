@@ -13,12 +13,12 @@
 
 	import { guess, result } from './stores.js';
 
-	var activeCard;
-	var activeImgFilename;
-	var unseenCardIds = [];
+	let activeCard;
+	let activeImgFilename;
+	let unseenCardIds = [];
 
-	var showUpload = false;
-	var gameOver = false;
+	let showUpload = false;
+	let gameOver = false;
 
 	// This function is used only one. Should it be anonymous? or moved into onMount?
 	function shuffleArray(array) {
@@ -31,6 +31,7 @@
 	async function getCardCount() {
 		const res = await fetch('http://localhost:5000/api/card/total_count')
 		const json = await res.json()
+		console.log(json)
 		if (json['message']=='success') {
 			return(json['data']['count'])
 		}		
@@ -61,13 +62,17 @@
 	}
 
 	function processGuess(event) {
+		if ($guess !== null) {
+			console.log("Guess is active. Cannot process new guess.")
+			return;
+		}
 		if (gameOver === true) {
-			console.log("Game over. Cannot keep guessing");
+			console.log("Game over. Cannot keep guessing.");
 			return;
 		}
 		// should I use submittedGuess or access store directly with $guess?
 		let submittedGuess = event.detail.guess;
-		guess.set(submittedGuess);
+		$guess = submittedGuess;
 
 		let data = {
 			id: activeCard["id"],
@@ -84,16 +89,17 @@
 		});
 
 		// this definitely needs to be cleaned up...
-		setTimeout(() => result.set(isGuessCorrect(submittedGuess)), 600);
-		var nextId = unseenCardIds.pop(); 
+		let guessBool = isGuessCorrect(submittedGuess);
+		setTimeout(() => $result = guessBool, 600);
+		let nextId = unseenCardIds.pop(); 
 		if (nextId === undefined) {
 			gameOver = true;
 		} else {
 			setTimeout(() => getNextCard(nextId), 1000);
 		}
 		setTimeout(() => {
-			result.set(null)
-			guess.set(null)
+			$result = null;
+			$guess = null;
 		}, 1200);
 	}
 

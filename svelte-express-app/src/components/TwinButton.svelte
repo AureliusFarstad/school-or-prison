@@ -5,15 +5,6 @@ import { fade } from 'svelte/transition';
 import { guess, result } from './../stores.js';
 
 const dispatch = createEventDispatcher();
-
-function dispatchGuess(submitted_guess) {
-    if ($guess === null) {
-        dispatch('button_guess', {guess: submitted_guess})
-    } else {
-        console.log("Cannot dispatch button press while another guess is active.")
-    }
-}
-
 </script>
 
 <div class="button-platform button-platform--school">
@@ -21,7 +12,11 @@ function dispatchGuess(submitted_guess) {
          class:button--school--active="{$guess === 'SCHOOL'}" 
          class:button--school--true="{$guess === 'SCHOOL' && $result === true}" 
          class:button--school--false="{$guess === 'SCHOOL' && $result === false}" 
-         on:click={() => {dispatchGuess("SCHOOL")}}
+         on:click={() => {
+            dispatch('button_guess', {
+                guess: 'SCHOOL'
+            }); 
+         }}       
          transition:fade>
          SCHOOL
     </div>
@@ -32,7 +27,11 @@ function dispatchGuess(submitted_guess) {
          class:button--prison--active="{$guess === 'PRISON'}" 
          class:button--prison--true="{$guess === 'PRISON' && $result === true}" 
          class:button--prison--false="{$guess === 'PRISON' && $result === false}" 
-         on:click={() => {dispatchGuess("PRISON")}}
+         on:click={() => {
+             dispatch('button_guess', {
+                 guess: 'PRISON'
+             })
+         }}
          transition:fade>
          PRISON
     </div>
@@ -119,6 +118,8 @@ function dispatchGuess(submitted_guess) {
     -webkit-transform: rotate(-15deg);
     -ms-transform: rotate(-15deg);
     transform: rotate(-15deg);
+
+    animation-delay: 1s;
 
     box-shadow: -1px 2px 4px 0 rgba(0,0,0,0.35);
     text-shadow: -0.5px 1px 3px rgba(239, 239, 239, 0.7), 0.5px -1px 3px rgba(73, 73, 73, 0.35);

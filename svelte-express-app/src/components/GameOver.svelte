@@ -1,6 +1,5 @@
 <script>
 import { onMount } from 'svelte'
-import { result } from '../stores.js';
 import { fly } from 'svelte/transition';
 import { cubicOut } from 'svelte/easing';
 

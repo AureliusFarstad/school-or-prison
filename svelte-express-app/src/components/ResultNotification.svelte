@@ -14,8 +14,8 @@ const outParams = {
     y: 10,
 }
 
-var string = '';
-var strColor = '';
+let string = '';
+let strColor = '';
 
 const unsubscribe = result.subscribe(value => {
     if (value === true) {
@@ -32,8 +32,8 @@ const unsubscribe = result.subscribe(value => {
 </script>
 
 {#if string}
-    <div class="center" in:fly={inParams} out:fly={outParams}>
-        <p style="color:{strColor};">{string}</p>
+    <div class='center' in:fly={inParams} out:fly={outParams}>
+        <p style='color:{strColor};'>{string}</p>
     </div>
 {/if}
 

@@ -3,9 +3,9 @@ import { result } from '../stores.js';
 
 import { fly, fade } from 'svelte/transition';
 
-var score = 0;
-var streak = 0;
-var count = 0;
+let score = 0;
+let streak = 0;
+let count = 0;
 
 const unsubscribe = result.subscribe(value => {
     if (value === true) {
@@ -19,14 +19,13 @@ const unsubscribe = result.subscribe(value => {
 });
 
 function colorFromRatio(unit_interval) {
-    var hue = (unit_interval * 120).toString(10);
+    let hue = (unit_interval * 120).toString(10);
     // 0 – red
     // 60 – yellow
     // 120 – green
     // 180 – turquoise
     // 240 – blue
     // 300 – pink
-    console.log(hue);
     return ['hsla(', hue, ' , 100%, 50%, 0.75)'].join('');
 }
 

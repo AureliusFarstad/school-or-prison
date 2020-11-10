@@ -7,19 +7,16 @@
     import { guess } from './../stores.js';
 
     export let imgFilename;
-    $: src = "./images/"+imgFilename
+    $: src = "./images/"+imgFilename;
 
-    let element
-    onMount(() => {
-        element = document.getElementById('image-card');
-    })
-
-    const position = { x: 0, y: 0 }
+    let element;
+    let position = { x: 0, y: 0 };
     const interactThreshold = 70;
     const interactMaxRotation = 15; // #TODO: implement rotation?
-    const vw = document.documentElement.clientWidth;
-    let offScreenX = 1.2*400
-    if (vw > 400) {
+    let vw;
+    let offScreenX = 1.2*400;
+    $: console.log(vw);
+    $: if (vw > 400) {
         offScreenX = 1.2*vw;
     }
     
@@ -48,7 +45,6 @@
     interact('.image-card').draggable({
         listeners: {
             start (event) {
-                // console.log(event.type, event.target);
                 event.target.setAttribute('data-dragging', true);
             },
             move (event) {
@@ -56,16 +52,13 @@
                 position.y += event.dy;
             },
             end (event) {
-                // console.log("end", position.x, position.y);
                 // event.target.setAttribute('data-dragging', 'string'); // Why doesn't this work?
                 event.target.setAttribute('data-dragging', false);
                 if (position.x > interactThreshold) {
-                    console.log("SWIPE RIGHT");
                     dispatch('swipe_guess', {
                         guess: 'PRISON'
                     });
                 } else if (position.x < -interactThreshold) {
-                    console.log("SWIPE LEFT");
                     dispatch('swipe_guess', {
                         guess: 'SCHOOL'
                     });
@@ -78,10 +71,13 @@
     })
 </script>
 
+<svelte:window bind:outerWidth={vw}></svelte:window>
+
 <img {src} 
       alt="A school or prison building" 
       class="image-card" 
-      id="image-card" 
+      id="image-card"
+      bind:this={element}
       style="transform: translate({position.x}px, {position.y}px)"
       data-dragging=false
 >
