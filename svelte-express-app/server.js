@@ -8,7 +8,6 @@ let bodyParser = require("body-parser");
 let db = require("./database.js");
 let imgUpload = require("./img-upload.js");
 
-const { cloud_name, api_key, api_secret } = require("./config");
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => {

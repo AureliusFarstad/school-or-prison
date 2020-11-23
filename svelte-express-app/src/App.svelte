@@ -14,8 +14,6 @@
 
 	import { guess, result } from "./stores.js";
 
-	import { url_origin } from "./../config.js";
-
 	onMount(async function () {
 		// Construct shuffled array of id's to query database
 		const count = await getCardCount();
@@ -42,7 +40,7 @@
 	}
 
 	async function getCardCount() {
-		const res = await fetch(url_origin + "/api/card/total_count");
+		const res = await fetch(process.env.URL_ORIGIN + "/api/card/total_count");
 		const json = await res.json();
 		if (json["message"] == "success") {
 			return json["data"]["count"];
@@ -50,7 +48,7 @@
 	}
 
 	async function fetchCard(index) {
-		const res = await fetch(url_origin + `/api/card/${index}`);
+		const res = await fetch(process.env.URL_ORIGIN + `/api/card/${index}`);
 		if (!res.ok) {
 			requestFailed = true;
 			// better way to throw error?
@@ -85,14 +83,14 @@
 
 	function processGuess(event) {
 		if ($guess !== null) {
-			console.log("Guess is active. Cannot process new guess.");
+			console.log("Guess is active. Cannot receive new guess.");
 			return;
 		}
 		if (gameOver === true) {
 			console.log("Game over. Cannot keep guessing.");
 			return;
 		}
-		
+
 		// Set guess and result. Store subscribers will initiate component animations.
 		let submittedGuess = event.detail;
 		$guess = submittedGuess;
@@ -108,7 +106,7 @@
 			id: activeCard["id"],
 			vote: submittedGuess,
 		};
-		fetch(url_origin + "/api/vote/", {
+		fetch(process.env.URL_ORIGIN + "/api/vote/", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",

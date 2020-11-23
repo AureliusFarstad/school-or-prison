@@ -5,13 +5,12 @@
 <script>
     import { createEventDispatcher } from "svelte";
     import { guess } from "./../stores.js";
-    import { cloud_url } from "./../../config.js"
 
     export let imgFilename;
     let src;
     // set src for first provided imgFilename
     $: if (imgFilename !== undefined && src === undefined) {
-        src = cloudinary_url + imgFilename;
+        src = process.env.CLOUDINARY_URL + imgFilename;
     }
 
     let showCard = true;
@@ -41,7 +40,7 @@
         showCard = false;
         position.x = 0;
         position.y = -1000;
-        src = cloudinary_url + imgFilename;
+        src = process.env.CLOUDINARY_URL + imgFilename;
     }
 
     function transitionEnd(event) {

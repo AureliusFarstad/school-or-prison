@@ -1,8 +1,6 @@
 <script>
     import { fade } from "svelte/transition";
 
-    import { url_origin } from "../../config.js";
-
     let building = "SCHOOL";
     let country = "";
     let city = "";
@@ -19,7 +17,8 @@
         formData.append("source", source);
         formData.append("image", files[0]);
 
-        fetch(url_origin + "/api/card", {
+        fetch(
+ + "/api/card", {
             method: "POST",
             body: formData,
         })

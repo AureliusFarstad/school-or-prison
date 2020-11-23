@@ -3,8 +3,6 @@
     import { fly } from "svelte/transition";
     import { cubicOut } from "svelte/easing";
 
-    import { url_origin } from "../../config.js";
-
     const inParams = {
         duration: 200,
         easing: cubicOut,
@@ -16,14 +14,14 @@
 
     onMount(async function () {
         const card_res = await fetch(
-            url_origin + "/api/card/total_count"
+            process.env.URL_ORIGIN + "/api/card/total_count"
         );
         const card_json = await card_res.json();
         if (card_json["message"] == "success") {
             cardCount = card_json["data"]["count"];
         }
         const vote_res = await fetch(
-            url_origin + "/api/vote/total_count"
+            process.env.URL_ORIGIN + "/api/vote/total_count"
         );
         const vote_json = await vote_res.json();
         if (vote_json["message"] == "success") {
