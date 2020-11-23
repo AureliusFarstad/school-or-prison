@@ -5,7 +5,6 @@ import json
 from shutil import copyfile
 
 json_src = "metadata.json"
-img_dir = "images/"
 
 if __name__ == "__main__":
     try:
@@ -16,10 +15,6 @@ if __name__ == "__main__":
         sys.exit("Specify output directory")
 
     database_file = outdir+'/buildings.db'
-    img_folder = outdir + "/images"
-
-    if not os.path.isdir(img_folder):
-        os.mkdir(img_folder)
 
     with open(json_src, "r") as read_file:
         collection = json.load(read_file)
@@ -39,16 +34,8 @@ if __name__ == "__main__":
                     upload_ip TEXT)''')
 
         for i, entry in enumerate(collection):
-            filename, file_extension = os.path.splitext(entry["fileName"])
-
-            new_img_filename = str(i+1)+file_extension
-            
-            img_src = 'images/' + filename + file_extension
-            img_dest = img_folder + '/' + new_img_filename
-            copyfile(img_src, img_dest)
-
             data_tuple = (
-                new_img_filename, 
+                entry["cloudinary"],
                 entry["building"], 
                 entry["city"], 
                 entry["country"], 

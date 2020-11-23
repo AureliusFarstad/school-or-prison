@@ -3,112 +3,143 @@
 </script>
 
 <script>
-    import { createEventDispatcher, onMount } from 'svelte';
-    import { guess } from './../stores.js';
+    import { createEventDispatcher } from "svelte";
+    import { guess } from "./../stores.js";
+    import { cloud_url } from "./../../config.js"
 
     export let imgFilename;
-    $: src = "./images/"+imgFilename;
+    let src;
+    // set src for first provided imgFilename
+    $: if (imgFilename !== undefined && src === undefined) {
+        src = cloudinary_url + imgFilename;
+    }
 
-    let element;
+    let showCard = true;
     let position = { x: 0, y: 0 };
     const interactThreshold = 70;
     const interactMaxRotation = 15; // #TODO: implement rotation?
     let vw;
-    let offScreenX = 1.2*400;
-    $: console.log(vw);
+    let offScreenX = 1.2 * 400;
     $: if (vw > 400) {
-        offScreenX = 1.2*vw;
+        offScreenX = 1.2 * vw;
     }
-    
-    let unsubscribe = guess.subscribe(value => {
-        if (value == 'SCHOOL') {
-            position.x = -1*offScreenX;
-        } else if (value == 'PRISON') {
-            position.x  = offScreenX;
-        } else {
-            if (element) {
-                element.setAttribute('data-dragging', true);
-                element.style.opacity = "0.0";
-                position.x = 0;
-                position.y = -50;
-                setTimeout(() => {
-                    element.setAttribute('data-dragging', false);
-                    element.style.opacity = "1.0";
-                    position.x = 0;
-                    position.y = 0;
-                }, 400);
-            }
+
+    // Swipe card when guess is registered
+    $: if ($guess == "SCHOOL") {
+        position.x = -1 * offScreenX;
+    } else if ($guess == "PRISON") {
+        position.x = offScreenX;
+    } else {
+        // guess === null
+        // Next card ready for display
+        showCard = true;
+        position.x = 0;
+        position.y = 0;
+    }
+
+    function updateImgSrc() {
+        showCard = false;
+        position.x = 0;
+        position.y = -1000;
+        src = cloudinary_url + imgFilename;
+    }
+
+    function transitionEnd(event) {
+        // Card offscreen at transitionEnd?
+        if (position.x == offScreenX || position.x == -offScreenX) {
+            updateImgSrc();
         }
-    });
+    }
+
+    $: if (imgFilename !== undefined && showCard == false) {
+        // Img src only fetched after swip completed:
+        updateImgSrc();
+    }
 
     const dispatch = createEventDispatcher();
-    interact('.image-card').draggable({
+
+    interact(".image-card").draggable({
         listeners: {
-            start (event) {
-                event.target.setAttribute('data-dragging', true);
+            start(event) {
+                event.target.setAttribute("data-dragging", true);
             },
-            move (event) {
-                position.x += event.dx; 
+            move(event) {
+                position.x += event.dx;
                 position.y += event.dy;
             },
-            end (event) {
-                // event.target.setAttribute('data-dragging', 'string'); // Why doesn't this work?
-                event.target.setAttribute('data-dragging', false);
+            end(event) {
+                event.target.setAttribute("data-dragging", false);
                 if (position.x > interactThreshold) {
-                    dispatch('swipe_guess', {
-                        guess: 'PRISON'
-                    });
+                    dispatch("swipe_guess", "PRISON");
                 } else if (position.x < -interactThreshold) {
-                    dispatch('swipe_guess', {
-                        guess: 'SCHOOL'
-                    });
+                    dispatch("swipe_guess", "SCHOOL");
                 } else {
                     position.x = 0;
                     position.y = 0;
                 }
-            }
-        }
-    })
+            },
+        },
+    });
 </script>
 
-<svelte:window bind:outerWidth={vw}></svelte:window>
-
-<img {src} 
-      alt="A school or prison building" 
-      class="image-card" 
-      id="image-card"
-      bind:this={element}
-      style="transform: translate({position.x}px, {position.y}px)"
-      data-dragging=false
->
-
 <style>
-.image-card{
-    object-fit: cover;
+    div.horizontal {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+    }
 
-    position: absolute;
-    left: 8%;
-    top: 6%;
-    right: 8%;
-    bottom: 6%;
-    z-index: 100;
-    width: 84%;
-    height: 88%;
+    div.vertical {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
 
-    border: 2px solid #e7e7e7;
-    border-radius: 20px;
+    .image-card {
+        object-fit: cover;
+        opacity: 1;
+        transition: opacity 2s;
+        z-index: 100;
 
-    touch-action: none;
-    user-select: none;
-}
+        max-height: 100%;
+        max-width: calc(min(88%, 640px));
 
-/* .image-card[data-dragging="string"] {
-	transition: transform 0.5s;
-} */
+        margin: auto;
+        display: block;
 
-.image-card[data-dragging="false"] {
-	transition: transform 0.5s, opacity 0.8s;
-}
+        border: 2px solid #e7e7e7;
+        border-radius: 20px;
 
+        touch-action: none;
+        user-select: none;
+    }
 
+    .zero-opacity {
+        opacity: 0;
+        transition: opacity 2s;
+    }
+
+    /* For smooth dragging(true) and smooth return to origin(false) */
+    .image-card[data-dragging="false"] {
+        transition: transform 0.5s;
+    }
 </style>
+
+<svelte:window bind:outerWidth={vw} />
+
+<div class="horizontal">
+    <div class="vertical">
+        <img
+            {src}
+            alt="A school or prison building"
+            class="image-card"
+            class:zero-opacity={showCard === false}
+            on:transitionend={transitionEnd}
+            on:load={() => {
+                dispatch('image_loaded', 'ImageCard');
+            }}
+            style="transform: translate({position.x}px, {position.y}px)"
+            data-dragging="false" />
+    </div>
+</div>

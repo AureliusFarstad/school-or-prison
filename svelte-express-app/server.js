@@ -1,68 +1,68 @@
-const express = require('express');
-// import express from 'express';
+const express = require("express");
 const app = express();
 
-const path = require('path');
-// import path from 'path'
-const fs = require('fs');
+const path = require("path");
+const fs = require("fs");
 
+let bodyParser = require("body-parser");
+let db = require("./database.js");
+let imgUpload = require("./img-upload.js");
+
+const { cloud_name, api_key, api_secret } = require("./config");
 const port = process.env.PORT || 5000;
-var bodyParser = require('body-parser');
-
-var db = require('./database.js');
-// import { db } from './database.js'
-var imgUpload = require('./img-upload.js');
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
 
-app.get('/api/card/total_count', (req, res, next) => {
-  console.log("GET card total_count")
-  var sql = 'SELECT COUNT(*) as count FROM buildings'
-  var params = []
+app.get("/api/card/total_count", (req, res, next) => {
+  let sql = "SELECT COUNT(*) as count FROM buildings";
+  let params = [];
   db.get(sql, params, (err, row) => {
     if (err) {
       res.status(400).json({
-        "error": err.message
+        error: err.message,
       });
-      return
+      return;
     }
     res.json({
-      "message": "success",
-      "data": row
-    })
+      message: "success",
+      data: row,
+    });
   });
 });
 
-app.get('/api/card/:id', (req, res, next) => {
-  console.log("GET card by id")
-  var sql = 'SELECT id, img_filename, building FROM buildings WHERE id = ?'
-  var params = [req.params.id]
+app.get("/api/card/:id", (req, res, next) => {
+  let sql = "SELECT id, img_filename, building FROM buildings WHERE id = ?";
+  let params = [req.params.id];
   db.get(sql, params, (err, row) => {
     if (err) {
       res.status(400).json({
-        "error": err.message
+        error: err.message,
       });
-      return
+      return;
     }
     res.json({
-      "message": "success",
-      "data": row
-    })
+      message: "success",
+      data: row,
+    });
   });
 });
 
-app.post('/api/card', imgUpload.single('image'), (req, res, next) => {
-  console.log("POST card")
-  var errors = []
+app.post("/api/card", imgUpload.single("image"), (req, res, next) => {
+  let errors = [];
+  if (req.body.building !== "SCHOOL" && req.body.building !== "PRISON") {
+    errors.push("Building type not specified correctly.");
+  }
   if (!req.body.city) {
     errors.push("No city specified.");
   }
@@ -73,61 +73,55 @@ app.post('/api/card', imgUpload.single('image'), (req, res, next) => {
     errors.push("No building type specified.");
   }
   if (errors.length) {
-    console.log(errors)
     res.status(400).json({
-      "error": errors.join(",")
+      error: errors.join(","),
     });
     return;
   }
-  
-    //TODO: Input sanitization
 
-  var imgFileName = req.file.filename;
-  var imgExtension = path.extname(imgFileName);
-  var fileName = path.basename(imgFileName,imgExtension);
-  var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  var data = {
+  let imgFileName = req.file.filename;
+  let imgExtension = path.extname(imgFileName);
+  let fileName = path.basename(imgFileName, imgExtension);
+  let ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  let data = {
     img_filename: imgFileName,
     building: req.body.building,
     city: req.body.city,
     country: req.body.country,
     source: req.body.source || "",
     upload_dt: fileName,
-    upload_ip: ip
-  }
+    upload_ip: ip,
+  };
 
-  var jsonDestination = '../database/user_uploads/' + fileName.concat(".json")
+  let jsonDestination = "../database/user_uploads/" + fileName.concat(".json");
   let dataString = JSON.stringify(data);
   fs.writeFileSync(jsonDestination, dataString);
-  
-  res.json({
-    "message": "success",
-    "data": data
-  })
-})
 
-app.get('/api/vote/total_count', (req, res, next) => {
-  console.log("GET vote total_count")
-  var sql = 'SELECT COUNT(*) as count FROM votes'
-  var params = []
-  db.get(sql, params, (err, row) => {
-    if (err) {
-      res.status(400).json({
-        "error": err.message
-      });
-      return
-    }
-    res.json({
-      "message": "success",
-      "data": row
-    })
+  res.json({
+    message: "success",
+    data: data,
   });
 });
 
-app.post('/api/vote/', (req, res, next) => {
-  console.log("POST vote")
-  var errors = []
-  console.log(req.body)
+app.get("/api/vote/total_count", (req, res, next) => {
+  let sql = "SELECT COUNT(*) as count FROM votes";
+  let params = [];
+  db.get(sql, params, (err, row) => {
+    if (err) {
+      res.status(400).json({
+        error: err.message,
+      });
+      return;
+    }
+    res.json({
+      message: "success",
+      data: row,
+    });
+  });
+});
+
+app.post("/api/vote/", (req, res, next) => {
+  let errors = [];
   if (!req.body.id) {
     errors.push("No id specified.");
   }
@@ -135,39 +129,36 @@ app.post('/api/vote/', (req, res, next) => {
     errors.push("No vote specified.");
   }
   if (errors.length) {
-    console.log(errors)
     res.status(400).json({
-      "error": errors.join(",")
+      error: errors.join(","),
     });
     return;
   }
 
-  //TODO: Input sanitization
-
-  var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  var data = {
+  let ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  let data = {
     id: req.body.id,
     ip: ip,
     vote: req.body.vote,
-  }
+  };
 
-  var sql = 'INSERT INTO votes (building_id, ip_address, vote) VALUES (?,?,?);'
-  var params = [data.id, data.ip, data.vote]
+  let sql = "INSERT INTO votes (building_id, ip_address, vote) VALUES (?,?,?);";
+  let params = [data.id, data.ip, data.vote];
   db.get(sql, params, (err, result) => {
     if (err) {
       res.status(400).json({
-        "error": err.message
+        error: err.message,
       });
       return;
     }
     res.json({
-      "message": "success",
-      "data": data
-    })
+      message: "success",
+      data: data,
+    });
   });
 });
 
 //Serve Svelte App
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "public", "index.html"));
 });
