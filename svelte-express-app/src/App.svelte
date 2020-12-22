@@ -9,7 +9,7 @@
 
 	import Modal from "./components/Modal.svelte";
 	import Upload from "./components/Upload.svelte";
-	import PokeTheArchitect from "./components/PokeTheArchitect.svelte";
+	import Error from "./components/Error.svelte";
 	import GameOver from "./components/GameOver.svelte";
 
 	import { guess, result } from "./stores.js";
@@ -228,7 +228,7 @@
 			<ResultNotification />
 		{/if}
 		{#if requestFailed}
-			<PokeTheArchitect />
+			<Error />
 		{/if}
 	</div>
 
