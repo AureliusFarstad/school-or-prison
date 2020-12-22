@@ -135,6 +135,12 @@ app.post("/api/vote/", (req, res, next) => {
   }
 
   let ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+
+  console.log("REMOTE ADDRESS")
+  console.log(req.headers["x-forwarded-for"])
+  console.log("X FORWARDED FOR")
+  console.log(req.connection.remoteAddress)
+  
   let data = {
     id: req.body.id,
     ip: ip,
