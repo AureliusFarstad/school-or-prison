@@ -141,6 +141,8 @@ app.post("/api/vote/", (req, res, next) => {
     vote: req.body.vote,
   };
 
+  console.log(data);
+
   let sql = "INSERT INTO votes (building_id, ip_address, vote) VALUES (?,?,?);";
   let params = [data.id, data.ip, data.vote];
   db.get(sql, params, (err, result) => {

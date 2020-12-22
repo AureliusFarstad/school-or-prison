@@ -17,18 +17,17 @@
         formData.append("source", source);
         formData.append("image", files[0]);
 
-        fetch(
- + "/api/card", {
+        fetch("/api/card", {
             method: "POST",
             body: formData,
         })
-            .then((response) => response.json())
-            .then((result) => {
-                console.log("Success:", result);
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-            });
+        .then((response) => response.json())
+        .then((result) => {
+            console.log("Success:", result);
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+        });
         submitted = true;
 
         building = "PRISON";
@@ -167,7 +166,7 @@
                 architects who dissect images for signs of hospitals, care
                 homes, offices and homes.
             </p>
-            <p class="link" on:click={submitAnother}>Feed our architects.</p>
+            <p class="link" on:click={submitAnother}>Keep feeding our architects.</p>
         </div>
     {:else}
         <div in:fade>
