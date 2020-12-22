@@ -13,6 +13,7 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+app.set("trust proxy", True); // Client’s IP address is understood as the left-most entry in the X-Forwarded-* header
 
 app.use(express.static("public"));
 
@@ -140,7 +141,7 @@ app.post("/api/vote/", (req, res, next) => {
   console.log(req.headers["x-forwarded-for"])
   console.log("X FORWARDED FOR")
   console.log(req.connection.remoteAddress)
-  
+
   let data = {
     id: req.body.id,
     ip: ip,
