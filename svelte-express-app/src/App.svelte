@@ -29,7 +29,7 @@
 	let unseenCardIds = [];
 
 	let showUpload = false;
-	let gameOver = true;
+	let gameOver = false;
 	let requestFailed = false;
 
 	function shuffleArray(array) {
