@@ -12,6 +12,8 @@
     var cardCount = "";
     var voteCount = "";
 
+    export let showUpload;
+
     onMount(async function () {
         const card_res = await fetch(
             process.env.URL_ORIGIN + "/api/card/total_count"
@@ -52,18 +54,36 @@
         width: 80%;
         transform: translate(-50%, -50%);
     }
+    .button__upload {
+        margin: 10px auto;
+
+		border-radius: 12px;
+		width: 200px;
+		height: 32px;
+
+		background-color: #444;
+
+        color: #a2a2a2;
+        font-size: 20px;
+		line-height: 32px;
+		text-align: center;
+		box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.5),
+            inset 0 1px 1px 0 hsla(0, 0%, 100%, 0.2);
+            
+        cursor: pointer;
+	}
 </style>
 
 {#if cardCount && voteCount}
     <div class="center" in:fly={inParams}>
         <h2>Thank you for playing!</h2>
-        <p>You're votes have been recorded. So far we have</p>
+        <p>Your votes have been recorded. So far we have</p>
         <h2>{cardCount} buildings</h2>
         <h2>{voteCount} votes</h2>
         <p>It doesn't seem fair to rank just yet.</p>
         <h2>
-            Help us grow. Share your score with your friends or submit a
-            building near you.
+            Help us grow. Share your score with your friends.
         </h2>
+        <h2 class="button__upload" on:click={() => (showUpload = true)}>Submit a building</h2>
     </div>
 {/if}

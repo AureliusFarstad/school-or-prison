@@ -29,7 +29,7 @@
 	let unseenCardIds = [];
 
 	let showUpload = false;
-	let gameOver = false;
+	let gameOver = true;
 	let requestFailed = false;
 
 	function shuffleArray(array) {
@@ -176,10 +176,12 @@
 
 		color: #a2a2a2;
 		font-size: 20px;
-		line-height: 20px;
+		line-height: 22px;
 		text-align: center;
-		box-shadow: 0 1px 1px 0 hsla(0, 0%, 100%, 0.2),
-			inset 0 1px 1px 0 rgba(0, 0, 0, 0.5);
+		box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.5),
+            inset 0 1px 1px 0 hsla(0, 0%, 100%, 0.2);
+
+		cursor: pointer;
 	}
 
 	.center-screen {
@@ -219,7 +221,7 @@
 
 	<div class="center-screen">
 		{#if gameOver}
-			<GameOver />
+			<GameOver bind:showUpload={showUpload}/>
 		{:else}
 			<ImageCard
 				imgFilename={activeImgFilename}

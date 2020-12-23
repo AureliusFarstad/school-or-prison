@@ -93,12 +93,9 @@ app.post("/api/card", imgUpload.single("image"), (req, res, next) => {
     upload_dt: fileName,
     upload_ip: ip,
   };
-  console.log(data);
 
   let jsonDestination = "../database/user_uploads/" + fileName.concat(".json");
   let dataString = JSON.stringify(data);
-  console.log(jsonDestination);
-  console.log(dataString);
   fs.writeFileSync(jsonDestination, dataString);
 
   res.json({
@@ -141,26 +138,15 @@ app.post("/api/vote/", (req, res, next) => {
 
   let ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 
-  console.log("X FORWARDED FOR")
-  console.log(req.headers["x-forwarded-for"])
-  console.log("REMOTE ADDRESS")
-  console.log(req.connection.remoteAddress)
-  console.log("IP")
-  console.log(req.ip)
-
   let data = {
     id: req.body.id,
     ip: ip,
     vote: req.body.vote,
   };
 
-  console.log(data);
-
   let sql = "INSERT INTO votes (building_id, ip_address, vote) VALUES (?,?,?);";
   let params = [data.id, data.ip, data.vote];
   db.get(sql, params, (err, result) => {
-    console.log(err);
-    console.log(result);
     if (err) {
       res.status(400).json({
         error: err.message,
