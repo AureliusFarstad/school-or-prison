@@ -7,6 +7,7 @@ const fs = require("fs");
 let bodyParser = require("body-parser");
 let db = require("./database.js");
 let imgUpload = require("./img-upload.js");
+const { json } = require("body-parser");
 
 const port = process.env.PORT || 5000;
 
@@ -92,9 +93,12 @@ app.post("/api/card", imgUpload.single("image"), (req, res, next) => {
     upload_dt: fileName,
     upload_ip: ip,
   };
+  console.log(data);
 
   let jsonDestination = "../database/user_uploads/" + fileName.concat(".json");
   let dataString = JSON.stringify(data);
+  console.log(jsonDestination);
+  console.log(dataString);
   fs.writeFileSync(jsonDestination, dataString);
 
   res.json({
@@ -137,10 +141,12 @@ app.post("/api/vote/", (req, res, next) => {
 
   let ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 
-  console.log("REMOTE ADDRESS")
-  console.log(req.headers["x-forwarded-for"])
   console.log("X FORWARDED FOR")
+  console.log(req.headers["x-forwarded-for"])
+  console.log("REMOTE ADDRESS")
   console.log(req.connection.remoteAddress)
+  console.log("IP")
+  console.log(req.ip)
 
   let data = {
     id: req.body.id,
@@ -153,6 +159,8 @@ app.post("/api/vote/", (req, res, next) => {
   let sql = "INSERT INTO votes (building_id, ip_address, vote) VALUES (?,?,?);";
   let params = [data.id, data.ip, data.vote];
   db.get(sql, params, (err, result) => {
+    console.log(err);
+    console.log(result);
     if (err) {
       res.status(400).json({
         error: err.message,
