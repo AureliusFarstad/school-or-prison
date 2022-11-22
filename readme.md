@@ -1,6 +1,6 @@
 # School or Prison
 
-School or Prison is an interactive web experience. Available at schoolprisons.com
+School or Prison is an interactive web experience available here[schoolprisons.com].
 
 ## Installation and Setup
 
